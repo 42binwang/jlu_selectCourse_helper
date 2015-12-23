@@ -8,7 +8,7 @@
 
 ## 启动小助手
 ```bash
-python jlu_select_courses.py.py
+python jlu_select_courses.py
 ```
 ## 注意
 course_id不是uims系统中教学班提供的编号，是在页面源代码中选课按钮旁的编号。
