@@ -146,8 +146,11 @@ def thread(i):
             continue
 
 if __name__ == "__main__":
-    try:
-        start()
-    except json_exp:
-        print ('Something error')
+    while True:
+        try:
+            start()
+        except json_exp:
+            print ('Something error, retrying...')
+            continue
+        return
 
