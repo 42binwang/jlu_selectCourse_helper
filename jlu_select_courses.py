@@ -17,8 +17,8 @@ from urllib import request
 from urllib import parse
 from threading import Thread
 
-user_id = ''
-pass_plain = ''
+user_id = '53130205'
+pass_plain = 'DHQE7LUM'
 
 # set num_of_worker to define the number of threads
 # Please do not set the num_of_threads too large, 
@@ -40,10 +40,11 @@ allowed_timeout = 1
 #
 # -----------------------   Attention!!!   ----------------------- 
 
-course_id = ['','']
+course_id = ['50820003']
 
 url_prefix = 'http://uims.jlu.edu.cn/ntms/'
 uims_opener = request.build_opener(request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+uims_opener.open(url_prefix + 'j_spring_security_check',parse.urlencode({'j_username':user_id, 'j_password':'' + md5(('UIMS'+user_id+pass_plain).encode()).hexdigest() }).encode())
 
 rest_work = queue.Queue()   
 result = queue.Queue()   
@@ -89,8 +90,7 @@ class Manager:
                 break;
             except:
                 print ('Something error, retrying...')
-    def add_job( self, callable, *args, **kwargs ):   
-        rest_work.put( (callable, args, kwargs) )  
+
     def status( self, *args, **kwargs ):
         if not result.empty():      
             return result.get( *args, **kwargs )
@@ -99,37 +99,29 @@ class Manager:
 
 class json_exp(Exception):
     def __init__(self):
+        #Debug
         pass
 
+def add(callable, *args, **kwargs ):   
+    rest_work.put( (callable, args, kwargs) )  
+
 def send_packet(datastr,url):
-    headers = {}
+    headers = dict()
     headers['Content-Type'] = 'application/json'    
     req = request.Request(url, json.dumps(json.loads(datastr)).encode(), headers)
     ret = uims_opener.open(req)    
     return ret
 
-def login(uims_opener,username,password):
-    LOGIN_URL = url_prefix + 'j_spring_security_check'
-    PASS_PREFIX = 'UIMS'
-    PASSWORD_ENCRYPTED = '' + md5((PASS_PREFIX+username+password).encode()).hexdigest()
-    login_data = {'j_username':user_id, 'j_password':PASSWORD_ENCRYPTED }
-    ret = uims_opener.open(LOGIN_URL,parse.urlencode(login_data).encode())
-    return ret
-
-def start_select_courses():
+def start():
     manager = Manager(len(course_id),allowed_timeout)
     for i in course_id:
-        manager.add_job(thread,i)
+        add(thread,i)
     manager.supervise()
     while True:
         res = manager.status()
         if res == None:
             print('Finish!')
             break
-
-def thread(i):
-    print('Course ' + i + ' is selecting ...')
-    select_course(i)
 
 def check_state(data): 
     try:
@@ -140,7 +132,8 @@ def check_state(data):
     finally:
         return ret
 
-def select_course(i):
+def thread(i):
+    print('Course ' + i + ' is selecting ...')
     while True:
         try:
             ret = send_packet('{"lsltId":"%s","opType":"Y"}' % (i) ,url_prefix + 
@@ -154,8 +147,7 @@ def select_course(i):
 
 if __name__ == "__main__":
     try:
-        login(uims_opener,user_id,pass_plain)
-        start_select_courses()
+        start()
     except json_exp:
-        print ('Something error, retrying...')
+        print ('Something error')
 
