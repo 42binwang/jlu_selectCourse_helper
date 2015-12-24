@@ -14,4 +14,4 @@ python jlu_select_courses.py
 course_id不是uims系统中教学班提供的编号，是在页面源代码中选课按钮旁的编号。
 
 如下所示：
-![sample]({{site.baseurl}}/https://raw.githubusercontent.com/42binwang/jlu_selectCourses_tools/master/sample.png)
+![sample](https://raw.githubusercontent.com/42binwang/jlu_selectCourses_tools/master/sample.png)
