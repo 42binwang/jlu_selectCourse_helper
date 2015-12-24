@@ -40,7 +40,7 @@ allowed_timeout = 1
 #
 # -----------------------   Attention!!!   ----------------------- 
 
-course_id = ['']
+course_id = ['','']
 
 url_prefix = 'http://uims.jlu.edu.cn/ntms/'
 uims_opener = request.build_opener(request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
@@ -78,7 +78,7 @@ class Manager:
             worker = Worker( rest_work, result, self.timeout )   
             self.workers.append(worker)   
     def supervise( self):     
-        while not rest_work.empty():
+        while len(self.workers):
             try:
                 worker = self.workers.pop()   
                 worker.join( )   
