@@ -17,8 +17,8 @@ from urllib import request
 from urllib import parse
 from threading import Thread
 
-user_id = '53130205'
-pass_plain = 'DHQE7LUM'
+user_id = ''
+pass_plain = ''
 
 # set num_of_worker to define the number of threads
 # Please do not set the num_of_threads too large, 
@@ -40,7 +40,7 @@ allowed_timeout = 1
 #
 # -----------------------   Attention!!!   ----------------------- 
 
-course_id = ['50820003']
+course_id = ['']
 
 url_prefix = 'http://uims.jlu.edu.cn/ntms/'
 uims_opener = request.build_opener(request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
@@ -152,5 +152,5 @@ if __name__ == "__main__":
         except json_exp:
             print ('Something error, retrying...')
             continue
-        return
+        break
 
